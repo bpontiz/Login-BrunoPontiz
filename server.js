@@ -1,4 +1,5 @@
 import express from 'express';
+import session from 'express-session';
 import apiRoutes from './routes/indexRoutes.js';
 import * as dotenv from 'dotenv';
 import passport from 'passport';
@@ -72,6 +73,8 @@ app.use(session({
     }
 }))
 
+app.use("/", apiRoutes);
+
 app.use(passport.initialize());
 
 app.use(passport.session());
@@ -82,17 +85,6 @@ app.use(express.json());
 
 app.use(express.static('public'));
 
-const isAuth = (req, res, next) => {
-    if (req.isAuthenticated()) {
-        next();
-    } else {
-        res.redirect('/login')
-    }
-};
-
-app.use("/", apiRoutes);
-
-
 const PORT = process.env.PORT;
 
 const server = app.listen(PORT, () => {
@@ -102,5 +94,3 @@ const server = app.listen(PORT, () => {
 server.on("error", (err) => {
     console.log(err);
 })
-
-export default isAuth;
