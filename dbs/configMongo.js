@@ -1,5 +1,6 @@
 import { Schema, model, connect, disconnect } from 'mongoose';
 import users from '../config/users.js';
+import bcrypt from 'bcrypt';
 
 const databaseName = 'login';
 
@@ -22,6 +23,7 @@ console.log(`Connection successful to database ${databaseName}.`);
 const UserDAO = model('users', userSchema);
 
 for (const user of users) {
+    user.pass = bcrypt.hashSync(user.pass, bcrypt.genSaltSync(10), null);
     newUsers.push(UserDAO.create(user));
 };
 
